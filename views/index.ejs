@@ -1,0 +1,23 @@
+<%- include('includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('includes/navigation.ejs') %>
+    <h1>Strona główna</h1>
+
+    <main>
+        <% if (posts.length > 0) { %>
+        <% for (post of posts) { %>
+        <h3>
+            <%= post.title %>
+        </h3>
+        <% } %>
+
+        <% } else { %>
+        <h1>
+            Brak postów do wyświetlenia
+        </h1>
+        <% } %>
+    </main>
+
+    <%- include('includes/end.ejs') %>

@@ -1,0 +1,25 @@
+{
+  "name": "template-nodejs",
+  "version": "1.0.0",
+  "description": "NodeJS with NoDemon",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
+  },
+  "author": "Adrian Kierenkiewicz",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^3.14.0",
+    "@quixo3/prisma-session-store": "^3.1.5",
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-session": "^1.17.3",
+    "prisma": "^3.14.0"
+  }
+}

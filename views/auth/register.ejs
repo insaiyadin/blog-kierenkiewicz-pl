@@ -1,0 +1,27 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <h1>Rejestracja</h1>
+
+    <main>
+        <form action="/auth/register" method="POST">
+            <div>
+                <label for="email">Adres email</label>
+                <input placeholder="Email ..." id="email" type="email" name="email" required>
+            </div>
+            <div>
+                <label for="passwordFirst">Hasło</label>
+                <input placeholder="Hasło ..." id="passwordFirst" type="password" name="password" required>
+            </div>
+            <div>
+                <label for="passwordSecond">Powtórz hasło</label>
+                <input placeholder="Powtórz hasło ..." id="passwordSecond" type="password" name="password2" required>
+            </div>
+
+            <button type="submit">Zarejestruj się</button>
+        </form>
+    </main>
+
+    <%- include('../includes/end.ejs') %>

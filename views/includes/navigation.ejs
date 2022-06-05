@@ -1,0 +1,23 @@
+<header>
+    <nav>
+        <ul>
+            <li>
+                <a href="/">Home</a>
+            </li>
+            <% if (!isAuthenticated) { %>
+            <li>
+                <a href="/auth/login">Login</a>
+            </li>
+            <li>
+                <a href="/auth/register">Register</a>
+            </li>
+            <% } else { %>
+            <li>
+                <form action="/auth/logout" method="post">
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
+            <% } %>
+        </ul>
+    </nav>
+</header>
