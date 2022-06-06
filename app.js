@@ -14,9 +14,12 @@ const {
     PrismaSessionStore
 } = require('@quixo3/prisma-session-store');
 
+const csrf = require('csurf');
+
 const errorController = require('./controllers/error');
 
 const app = express();
+const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -42,10 +45,35 @@ app.use(session({
     )
 }));
 
+// !! CSRF PROTECTION !!
+app.use(csrfProtection);
+
+app.use(async (req, res, next) => {
+    if (!req.session.user) {
+        return next();
+    }
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req.session.user.id
+        }
+    })
+    req.user = user;
+    next();
+});
+
+app.use(async (req, res, next) => {
+    res.locals.isAuthenticated = req.session.isAuthenticated;
+    res.locals.csrf = req.csrfToken();
+    res.locals.isAdmin = false;
+    if (req.session.user) {
+        res.locals.isAdmin = req.user.isSuperuser;
+    }
+    next();
+})
+
 app.use('/admin', adminRoutes);
 app.use('/auth', authRoutes);
 app.use('/', indexRoutes);
-
 
 app.use(errorController.get404);
 

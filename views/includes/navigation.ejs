@@ -4,7 +4,11 @@
             <li>
                 <a href="/">Home</a>
             </li>
-
+            <% if (isAdmin) { %>
+            <li>
+                <a href="/admin">Admin</a>
+            </li>
+            <% } %>
             <% if (!isAuthenticated) { %>
             <li>
                 <a href="/auth/login">Login</a>
@@ -14,7 +18,8 @@
             </li>
             <% } else { %>
             <li>
-                <form action="/auth/logout" method="post">
+                <form action="/auth/logout" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrf %>">
                     <button type="submit">Logout</button>
                 </form>
             </li>
