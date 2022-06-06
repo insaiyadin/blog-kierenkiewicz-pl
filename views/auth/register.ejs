@@ -6,6 +6,11 @@
     <h1>Rejestracja</h1>
 
     <main>
+        <% if (errorMessage) { %>
+        <div>
+            <%= errorMessage %>
+        </div>
+        <% } %>
         <form action="/auth/register" method="POST">
             <div>
                 <label for="email">Adres email</label>
@@ -19,7 +24,7 @@
                 <label for="passwordSecond">Powtórz hasło</label>
                 <input placeholder="Powtórz hasło ..." id="passwordSecond" type="password" name="password2" required>
             </div>
-
+            <input type="hidden" name="_csrf" value="<%= csrf %>">
             <button type="submit">Zarejestruj się</button>
         </form>
     </main>

@@ -4,7 +4,7 @@
             <li>
                 <a href="/">Home</a>
             </li>
-            <% if (isAdmin) { %>
+            <% if (user.isSuperuser) { %>
             <li>
                 <a href="/admin">Admin</a>
             </li>

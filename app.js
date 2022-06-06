@@ -3,18 +3,16 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const PORT = 3000;
-
 const {
     PrismaClient
 } = require('@prisma/client');
 const prisma = new PrismaClient();
-
 const session = require('express-session');
 const {
     PrismaSessionStore
 } = require('@quixo3/prisma-session-store');
-
 const csrf = require('csurf');
+const flash = require('connect-flash');
 
 const errorController = require('./controllers/error');
 
@@ -47,6 +45,7 @@ app.use(session({
 
 // !! CSRF PROTECTION !!
 app.use(csrfProtection);
+app.use(flash());
 
 app.use(async (req, res, next) => {
     if (!req.session.user) {
@@ -64,9 +63,9 @@ app.use(async (req, res, next) => {
 app.use(async (req, res, next) => {
     res.locals.isAuthenticated = req.session.isAuthenticated;
     res.locals.csrf = req.csrfToken();
-    res.locals.isAdmin = false;
+    res.locals.user = false;
     if (req.session.user) {
-        res.locals.isAdmin = req.user.isSuperuser;
+        res.locals.user = req.user;
     }
     next();
 })

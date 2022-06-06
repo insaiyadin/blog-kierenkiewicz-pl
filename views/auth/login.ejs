@@ -6,6 +6,11 @@
     <h1>Logowanie</h1>
 
     <main>
+        <% if (errorMessage) { %>
+        <div>
+            <%= errorMessage %>
+        </div>
+        <% } %>
         <form action="/auth/login" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrf %>">
             <input type="email" name="email">
