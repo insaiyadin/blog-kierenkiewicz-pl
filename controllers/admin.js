@@ -1,6 +1,6 @@
-exports.getSomeLink = (req, res, next) => {
-  res.render('admin/some-link', {
-    pageTitle: 'Add Product',
+exports.getIndex = (req, res, next) => {
+  res.render('admin/index', {
+    pageTitle: 'Admin',
     isAuthenticated: req.session.isAuthenticated,
   });
 };
