@@ -13,13 +13,20 @@ var transporter = nodemailer.createTransport({
     }
 });
 
+// validation
+const {
+    validationResult
+} = require('express-validator')
+
 const {
     PrismaClient
 } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 const {
     redirect
 } = require('express/lib/response');
-const prisma = new PrismaClient();
+
 
 exports.getLogin = (req, res, next) => {
     let message = req.flash('error');
@@ -89,49 +96,42 @@ exports.getRegister = (req, res, next) => {
 exports.postRegister = async (req, res, next) => {
     const {
         email,
-        password,
-        password2
+        password
     } = req.body;
 
-    const user = await prisma.user.findUnique({
-        where: {
-            email: email
+    const validationErrors = validationResult(req);
+
+    if (!validationErrors.isEmpty()) {
+        console.log(validationErrors.array());
+        return res.status(422).render('auth/register', {
+            pageTitle: 'Rejestracja',
+            errorMessage: validationErrors.array()[0].msg
+        })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await prisma.user.create({
+        data: {
+            email: email,
+            password: hashedPassword
         }
-    })
+    });
 
-    if (!user) {
-        if (password && password2) {
-            if (password === password2) {
-                const hashedPassword = await bcrypt.hash(password, 12);
-                await prisma.user.create({
-                    data: {
-                        email: email,
-                        password: hashedPassword
-                    }
-                });
+    const msg = {
+        to: email,
+        from: 'blog@kierenkiewicz.pl',
+        subject: 'Logowanie',
+        html: '<h1>Rejestracja przebiegła pomyślnie</h1>'
+    }
 
-                const msg = {
-                    to: email,
-                    from: 'blog@kierenkiewicz.pl',
-                    subject: 'Logowanie',
-                    html: '<h1>Rejestracja przebiegła pomyślnie</h1>'
-                }
+    // add sending emails via CRON
 
-                // add sending emails via CRON
+    transporter.sendMail(msg, err => {
+        console.log(err);
+    });
 
-                transporter.sendMail(msg, err => {
-                    console.log(err);
-                });
+    return res.redirect('/auth/login');
 
-                return res.redirect('/auth/login');
-            }
-            req.flash('error', 'Hasła nie są takie same')
-            return res.redirect('/auth/register');
-        };
-    };
-
-    req.flash('error', 'Ten adres email już istnieje')
-    res.redirect('/auth/register');
 
     // ###### 
 };
