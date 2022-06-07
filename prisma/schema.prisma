@@ -18,12 +18,14 @@ model Profile {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  email       String   @unique
-  password    String
-  isSuperuser Boolean  @default(false)
-  name        String?
-  profile     Profile?
+  id                       Int       @id @default(autoincrement())
+  email                    String    @unique
+  password                 String
+  isSuperuser              Boolean   @default(false)
+  name                     String?
+  profile                  Profile?
+  resetToken               String?
+  resetTokenExpirationDate DateTime?
 }
 
 model Session {
