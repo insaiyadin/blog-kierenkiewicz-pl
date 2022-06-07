@@ -131,9 +131,6 @@ exports.postRegister = async (req, res, next) => {
     });
 
     return res.redirect('/auth/login');
-
-
-    // ###### 
 };
 
 exports.getReset = (req, res, next) => {
