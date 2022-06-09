@@ -11,4 +11,8 @@ const router = express.Router();
 // /admin => GET
 router.get('/', isAuthenticated, isAdmin, adminController.getIndex);
 
+router.get('/add-post', isAuthenticated, isAdmin, adminController.getAddPost);
+
+router.post('/add-post', isAuthenticated, isAdmin, adminController.postAddPost);
+
 module.exports = router;

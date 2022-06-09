@@ -13,6 +13,7 @@ const {
 } = require('@quixo3/prisma-session-store');
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const multer = require('multer');
 
 const errorController = require('./controllers/error');
 
@@ -29,6 +30,9 @@ const authRoutes = require('./routes/auth');
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+app.use(multer({
+    dest: 'posts_images'
+}).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'secret',
@@ -60,7 +64,7 @@ app.use(async (req, res, next) => {
     next();
 });
 
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
     res.locals.isAuthenticated = req.session.isAuthenticated;
     res.locals.csrf = req.csrfToken();
     res.locals.user = false;
@@ -79,7 +83,10 @@ app.get('/500', errorController.get500);
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-    res.redirect('/500');
+    // res.status(500).render('500', {
+    //     pageTitle: 'Server error',
+    // });
+    res.status(500).redirect('/500');
 })
 
 app.listen(PORT, () => {

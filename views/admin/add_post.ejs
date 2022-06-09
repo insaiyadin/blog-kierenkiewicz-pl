@@ -1,0 +1,28 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+    <h1>Add post</h1>
+
+    <main>
+        <form action="/admin/add-post" method="POST" enctype="multipart/form-data">
+            <div>
+                <label for="title">Tytuł</label>
+                <input type="text" name="title" id="title">
+            </div>
+            <div>
+                <label for="text">Tekst</label>
+                <input type="text" name="text" id="text">
+            </div>
+            <div>
+                <label for="image">Zdjęcie</label>
+                <input type="file" name="image" id="image">
+            </div>
+            <input type="hidden" name="_csrf" value="<%= csrf %>">
+            <button type="submit" class="btn">Dodaj</button>
+        </form>
+
+    </main>
+
+    <%- include('../includes/end.ejs') %>
