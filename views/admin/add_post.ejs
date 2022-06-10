@@ -6,14 +6,19 @@
     <h1>Add post</h1>
 
     <main>
+        <% if (errorMessage) { %>
+        <div>
+            <%= errorMessage %>
+        </div>
+        <% } %>
         <form action="/admin/add-post" method="POST" enctype="multipart/form-data">
             <div>
                 <label for="title">Tytuł</label>
-                <input type="text" name="title" id="title">
+                <input type="text" name="title" id="title" value="<%= title %>">
             </div>
             <div>
                 <label for="text">Tekst</label>
-                <input type="text" name="text" id="text">
+                <textarea type="text" name="text" id="text"><%= text %></textarea>
             </div>
             <div>
                 <label for="image">Zdjęcie</label>

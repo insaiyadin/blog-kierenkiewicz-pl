@@ -26,6 +26,7 @@ model User {
   profile                  Profile?
   resetToken               String?
   resetTokenExpirationDate DateTime?
+  Post                     Post[]
 }
 
 model Session {
@@ -33,4 +34,15 @@ model Session {
   sid       String   @unique
   data      String
   expiresAt DateTime
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  text      String
+  image     String
+  createdBy User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  userId    Int
+  visitable Boolean  @default(true)
 }

@@ -23,10 +23,6 @@ const {
 } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const {
-    redirect
-} = require('express/lib/response');
-
 
 exports.getLogin = (req, res, next) => {
     let message = req.flash('error');

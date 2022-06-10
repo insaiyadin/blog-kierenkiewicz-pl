@@ -20,6 +20,22 @@ const errorController = require('./controllers/error');
 const app = express();
 const csrfProtection = csrf();
 
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'post_images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${file.originalname}`);
+    }
+});
+
+const fileTypes = (req, file, cb) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        cb(null, true);
+    }
+    cb(null, false);
+}
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -31,7 +47,8 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(multer({
-    dest: 'posts_images'
+    storage: fileStorage,
+    fileFilter: fileTypes
 }).single('image'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
@@ -78,16 +95,16 @@ app.use('/admin', adminRoutes);
 app.use('/auth', authRoutes);
 app.use('/', indexRoutes);
 
-app.get('/500', errorController.get500);
+// app.get('/500', errorController.get500);
 
 app.use(errorController.get404);
 
-app.use((error, req, res, next) => {
-    // res.status(500).render('500', {
-    //     pageTitle: 'Server error',
-    // });
-    res.status(500).redirect('/500');
-})
+// app.use((error, req, res, next) => {
+//     // res.status(500).render('500', {
+//     //     pageTitle: 'Server error',
+//     // });
+//     res.status(500).redirect('/500');
+// })
 
 app.listen(PORT, () => {
     console.log(`App listening on localhost:${PORT}`);
