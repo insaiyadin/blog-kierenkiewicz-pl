@@ -3,7 +3,13 @@
 
 <body>
     <%- include('../includes/navigation.ejs') %>
-    <h1>Add post</h1>
+    <h1>
+        <% if (edit) { %>
+            Edycja
+        <% } else { %>
+            Dodawanie
+        <% } %>
+    </h1>
 
     <main>
         <% if (errorMessage) { %>
@@ -11,7 +17,7 @@
             <%= errorMessage %>
         </div>
         <% } %>
-        <form action="/admin/add-post" method="POST" enctype="multipart/form-data">
+        <form action="/admin/<% if (!edit) { %>add-post<% } else { %>edit-post<% }%>" method="POST" enctype="multipart/form-data">
             <div>
                 <label for="title">Tytuł</label>
                 <input type="text" name="title" id="title" value="<%= title %>">
@@ -25,7 +31,16 @@
                 <input type="file" name="image" id="image">
             </div>
             <input type="hidden" name="_csrf" value="<%= csrf %>">
-            <button type="submit" class="btn">Dodaj</button>
+            <button type="submit" class="btn">
+                <% if (edit) { %>
+                    Zapisz zmiany
+                <% } else { %>
+                    Dodaj
+                <% } %>
+            </button>
+            <% if (edit) { %>
+                <input type="hidden" name="postId" value="<%= id %>">
+            <% } %>
         </form>
 
     </main>

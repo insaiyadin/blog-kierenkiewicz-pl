@@ -18,6 +18,7 @@ exports.getAddPost = (req, res, next) => {
     title: '',
     text: '',
     pageTitle: 'Add post',
+    edit: false,
     errorMessage: ''
   });
 };
@@ -31,14 +32,11 @@ exports.postAddPost = async (req, res, next) => {
   if (!image) {
     return res.render('admin/add_post', {
       pageTitle: 'Add post',
-
       title: title,
       text: text,
-
       errorMessage: 'Niepoprawny format pliku'
     })
   }
-
   const imgUrl = image.path;
 
   await prisma.post.create({
@@ -46,6 +44,67 @@ exports.postAddPost = async (req, res, next) => {
       title: title,
       text: text,
       image: imgUrl,
+      userId: req.user.id
+    }
+  })
+
+  res.redirect('/');
+};
+
+exports.getEditPost = async (req, res, next) => {
+  const { postId } = req.params;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(postId)
+    }
+  })
+
+  if (!post) {
+    return res.redirect('/');
+  }
+
+  res.render('admin/add_post', {
+    id: post.id,
+    title: post.title,
+    text: post.text,
+    edit: true,
+    pageTitle: 'Edit post',
+    errorMessage: ''
+  });
+};
+
+exports.postEditPost = async (req, res, next) => {
+  const {
+    title,
+    text,
+    postId
+  } = req.body;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(postId)
+    }
+  })
+
+  if (!post) {
+    return res.redirect('/');
+  }
+
+  let imagePath = post.image;
+  const image = req.file;
+  if (image) {
+    imagePath = image.path;
+  }
+  
+  await prisma.post.update({
+    where: {
+      id: Number(postId)
+    },
+    data: {
+      title: title,
+      text: text,
+      image: imagePath,
       userId: req.user.id
     }
   })
