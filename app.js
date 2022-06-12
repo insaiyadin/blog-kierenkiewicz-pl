@@ -50,7 +50,11 @@ app.use(multer({
     storage: fileStorage,
     fileFilter: fileTypes
 }).single('image'));
+
+// static files serving
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/post_images', express.static(path.join(__dirname, 'post_images')));
+
 app.use(session({
     secret: 'secret',
     resave: false,

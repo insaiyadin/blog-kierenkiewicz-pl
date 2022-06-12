@@ -31,4 +31,8 @@ router.post('/add-post', isAuthenticated, isAdmin,
     ],
     adminController.postAddPost);
 
+router.get('/edit-post/:postId', isAuthenticated, isAdmin, adminController.getEditPost);
+
+router.post('/edit-post', isAuthenticated, isAdmin, adminController.postEditPost);
+
 module.exports = router;
