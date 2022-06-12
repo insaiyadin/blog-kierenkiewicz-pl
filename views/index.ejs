@@ -7,18 +7,36 @@
 
     <main>
         <% if (posts.length > 0) { %>
-            <% for (post of posts) { %>
-                <img src="/<%= post.image %>" alt="article-photo">
-                    <h3>
-                        <%= post.title %>
-                    </h3>
-                    <p>
-                        <a href="/admin/edit-post/<%= post.id %>">Edytuj</a>
-                    </p>
-                <span><%= post.createdAt %></span>
-                <hr>
+        <% for (post of posts) { %>
+        <img src="/<%= post.image %>" alt="article-photo">
+        <h3>
+            <%= post.title %>
+        </h3>
+        <p>
+            <a href="/admin/edit-post/<%= post.id %>">Edytuj</a>
+        </p>
+        <span><%= post.createdAt %></span>
+        <hr>
+        <% } %>
+        <section class="pagination">
+            <% if (currentPage !== 1 && previousPage !== 1) { %>
+            <a href="?p=1">1</a>
             <% } %>
-            Nic więcej nie ma
+
+            <% if (hasPreviousPage) { %>
+            <a href="?p=<%= previousPage %>"><%= previousPage %></a>
+            <% } %>
+
+            <a href="?p=<%= currentPage %>"><%= currentPage %></a>
+
+            <% if (hasNextPage) { %>
+            <a href="?p=<%= nextPage %>"><%= nextPage %></a>
+            <% } %>
+
+            <% if (lastPage !== currentPage && nextPage !== lastPage) { %>
+            <a href="?p=<%= lastPage %>"><%= lastPage %></a>
+            <% } %>
+        </section>
         <% } else { %>
         <h1>
             Brak postów do wyświetlenia

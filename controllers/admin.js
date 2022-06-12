@@ -3,9 +3,7 @@ const {
 } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const {
-  redirect
-} = require("express/lib/response");
+const deleteFile = require('../util/deleteFile');
 
 exports.getIndex = (req, res, next) => {
   res.render('admin/index', {
@@ -52,7 +50,9 @@ exports.postAddPost = async (req, res, next) => {
 };
 
 exports.getEditPost = async (req, res, next) => {
-  const { postId } = req.params;
+  const {
+    postId
+  } = req.params;
 
   const post = await prisma.post.findUnique({
     where: {
@@ -61,7 +61,8 @@ exports.getEditPost = async (req, res, next) => {
   })
 
   if (!post) {
-    return res.redirect('/');
+    // return res.redirect('/');
+    return next(new Error('Post nie istnieje'))
   }
 
   res.render('admin/add_post', {
@@ -94,9 +95,11 @@ exports.postEditPost = async (req, res, next) => {
   let imagePath = post.image;
   const image = req.file;
   if (image) {
+    // remove file
+    deleteFile.deleteFile(imagePath);
     imagePath = image.path;
   }
-  
+
   await prisma.post.update({
     where: {
       id: Number(postId)
