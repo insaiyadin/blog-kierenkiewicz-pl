@@ -5,7 +5,6 @@ const isAuthenticated = require('../middleware/is-authenticated');
 const isAdmin = require('../middleware/is-admin');
 
 const {
-    check,
     body
 } = require('express-validator');
 
@@ -18,7 +17,7 @@ router.get('/add-post', isAuthenticated, isAdmin, adminController.getAddPost);
 
 router.post('/add-post', isAuthenticated, isAdmin,
     [
-        body('title').isLength({
+        body('title', 'Wpisz tytuł 2-120 znaków').isLength({
             min: 2,
             max: 120
         }),
@@ -31,6 +30,19 @@ router.post('/add-post', isAuthenticated, isAdmin,
 
 router.get('/edit-post/:postId', isAuthenticated, isAdmin, adminController.getEditPost);
 
-router.post('/edit-post', isAuthenticated, isAdmin, adminController.postEditPost);
+router.post('/edit-post', isAuthenticated, isAdmin,
+    [
+        body('title', 'Wpisz tytuł 2-120 znaków').isLength({
+            min: 2,
+            max: 120
+        }),
+        body('text').isLength({
+            min: 2,
+            max: 2000
+        })
+    ],
+    adminController.postEditPost);
+
+router.delete('/post/:postId', isAuthenticated, isAdmin, adminController.deletePost)
 
 module.exports = router;

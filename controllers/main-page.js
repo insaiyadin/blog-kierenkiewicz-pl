@@ -3,7 +3,7 @@ const {
 } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-MAIN_PAGE_TOTAL = 1;
+MAIN_PAGE_TOTAL = 3;
 
 exports.getIndex = async (req, res, next) => {
     let page = +req.query.p || 1;

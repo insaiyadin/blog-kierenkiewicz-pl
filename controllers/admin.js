@@ -3,6 +3,10 @@ const {
 } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+const {
+  validationResult
+} = require('express-validator');
+
 const deleteFile = require('../util/deleteFile');
 
 exports.getIndex = (req, res, next) => {
@@ -35,6 +39,18 @@ exports.postAddPost = async (req, res, next) => {
       errorMessage: 'Niepoprawny format pliku'
     })
   }
+
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.render('admin/add_post', {
+      pageTitle: 'Add post',
+      title: title,
+      text: text,
+      errorMessage: errors.array()[0].msg
+    })
+  }
+
   const imgUrl = image.path;
 
   await prisma.post.create({
@@ -92,6 +108,19 @@ exports.postEditPost = async (req, res, next) => {
     return res.redirect('/');
   }
 
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    return res.render('admin/add_post', {
+      id: post.id,
+      title: post.title,
+      text: post.text,
+      edit: true,
+      pageTitle: 'Edit post',
+      errorMessage: errors.array()[0].msg
+    });
+  }
+
   let imagePath = post.image;
   const image = req.file;
   if (image) {
@@ -114,3 +143,30 @@ exports.postEditPost = async (req, res, next) => {
 
   res.redirect('/');
 };
+
+exports.deletePost = async (req, res, next) => {
+  const {
+    postId
+  } = req.params
+
+  try {
+    const removedPost = await prisma.post.delete({
+      where: {
+        id: +postId
+      }
+    })
+
+    if (removedPost.image) {
+      deleteFile.deleteFile(removedPost.image);
+    }
+
+    res.json({
+      message: 'Pomyślnie usunięto post'
+    })
+  } catch {
+    res.status(500).json({
+      message: 'Nie udało się usunąć postu'
+    })
+  }
+
+}

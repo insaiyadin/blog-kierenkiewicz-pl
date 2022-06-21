@@ -8,15 +8,22 @@
     <main>
         <% if (posts.length > 0) { %>
         <% for (post of posts) { %>
-        <img src="/<%= post.image %>" alt="article-photo">
-        <h3>
-            <%= post.title %>
-        </h3>
-        <p>
-            <a href="/admin/edit-post/<%= post.id %>">Edytuj</a>
-        </p>
-        <span><%= post.createdAt %></span>
-        <hr>
+        <article>
+            <img src="/<%= post.image %>" alt="article-photo">
+            <h3>
+                <%= post.title %>
+            </h3>
+            <% if (user.isSuperuser) { %>
+            <p>
+                <a href="/admin/edit-post/<%= post.id %>">Edytuj</a>
+                <input name="postId" type="hidden" value="<%= post.id %>">
+                <input type="hidden" name="_csrf" value="<%= csrf %>">
+                <button type="button" onclick="deletePost(this)">Usuń</button>
+            </p>
+            <% } %>
+            <span><%= post.createdAt %></span>
+            <hr>
+        </article>
         <% } %>
         <section class="pagination">
             <% if (currentPage !== 1 && previousPage !== 1) { %>
@@ -45,3 +52,4 @@
     </main>
 
     <%- include('includes/end.ejs') %>
+    <script src="/js/index/index.js"></script>
